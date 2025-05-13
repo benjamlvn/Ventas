@@ -1,6 +1,8 @@
 {% extends 'ventas/base.html' %}
 
 
+{% load static %}
+
 {% block contenido %}
 
 <!-- <div class="slider">
@@ -18,7 +20,7 @@
 <div class="productos">
         <div class="producto">
             <div class="contenedor">
-                <img src="img/productos/lenovo_yoga_710.jpeg" alt="yoga">
+                <img src="{% static 'app/img/productos/lenovo_yoga_710.jpeg' %}" alt="yoga">
             </div>
 
             <div class="detalles">
@@ -31,7 +33,7 @@
 
         <div class="producto">
             <div class="contenedor">
-                <img src="img/productos/iphone.jpeg" alt="yoga">
+                <img src="{% static 'app/img/productos/iphone.jpeg' %}" alt="yoga">
             </div>
 
             <div class="detalles">
@@ -43,7 +45,7 @@
 
         <div class="producto">
             <div class="contenedor">
-                <img src="img/productos/lenovo_tablet.jpeg" alt="tablet">
+                <img src="{% static 'app/img/productos/lenovo_tablet.jpeg' %}" alt="tablet">
             </div>
 
             <div class="detalles">
@@ -55,7 +57,7 @@
 
         <div class="producto">
             <div class="contenedor">
-                <img src="img/productos/s9.jpeg" alt="s9">
+                <img src="{% static 'app/img/productos/s9.jpeg' %}" alt="s9">
             </div>
 
             <div class="detalles">
@@ -67,7 +69,7 @@
 
         <div class="producto">
             <div class="contenedor">
-                <img src="img/productos/macbook.jpeg" alt="macbook">
+                <img src="{% static 'app/img/productos/macbook.jpeg' %}" alt="macbook">
             </div>
 
             <div class="detalles">
@@ -76,6 +78,7 @@
                 <h3>$1.200.000</h3>
             </div>
         </div>
+        
 
     </div>
 
