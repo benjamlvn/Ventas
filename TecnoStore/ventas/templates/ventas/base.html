@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Tecnomarket</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.15/jquery.bxslider.css">
-    <link rel="stylesheet" href="css/estilos.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static  'app/css/estilos.css' %}">
 </head>
 <body>
 <header id="header">
-    <img src="img/menuiconwhite.png" alt="menu" class="menu" id="menu">
+    <img src="{% static 'app/img/menuiconwhite.png' %}" alt="menu" class="menu" id="menu">
     <div class="contenedor_logo">
-        <img src="img/tecnomarketpngicono.png" alt="logo" class="logo">
+        <img src="{% static 'app/img/logo.png' %}" alt="logo" class="logo">
     </div>
     <div>
         <nav id="nav">
@@ -21,10 +22,10 @@
                     <a href="index.html">Inicio</a>
                 </li>
                 <li>
-                    <a href="contacto.html">Contácto</a>
+                    <a href="galeria.html">Galería</a>
                 </li>
                 <li>
-                    <a href="galeria.html">Galería</a>
+                    <a href="contacto.html">Carrito</a>
                 </li>
             </ul>
         </nav>
@@ -44,17 +45,18 @@
 <footer>
     <footer>
         <div class="marcas">
-            <img src="img/footer/apple.png" alt="apple" style="width: 30px;">
-            <img src="img/footer/lenovo.png" alt="lenovo">
-            <img src="img/footer/microsoft.png" alt="microsoft">
-            <img src="img/footer/samsung.png" alt="samsung">
-            <img src="img/footer/xiaomi.png" alt="xiaomi">
+            <img src="{% static 'app/img/footer/apple.png' %}" alt="apple" style="width: 30px;">
+            <img src="{% static 'app/img/footer/lenovo.png' %}" alt="lenovo">
+            <img src="{% static 'app/img/footer/microsoft.png' %}" alt="microsoft">
+            <img src="{% static 'app/img/footer/samsung.png' %}" alt="samsung">
+            <img src="{% static 'app/img/footer/xiaomi.png' %}" alt="xiaomi">
         </div>
         <div class="logo_footer">
-            <img src="img/tecnomarketpngicono.png" alt="logo">
+            <img src="{% static 'app/img/logo.png' %}" alt="logo"> 
         </div>
     </footer>
 </footer>
-<script src="js/menu.js"></script>
+
+<script src="{% static 'app/js/menu.js' %}"></script>
 </body>
 </html>
