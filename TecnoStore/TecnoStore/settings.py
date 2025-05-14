@@ -26,6 +26,11 @@ SECRET_KEY = 'django-insecure-5pi=2r--@=c!28xw-a1!rai=9*m$-kus8e$r*3zvlujqsdf9*&
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+# Application definition
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
+
+LOGIN_REDIRECT_URL = '/'  # o como se llame tu vista de inicio
+LOGOUT_REDIRECT_URL = '/'
 
 
 # Application definition
@@ -38,7 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ventas',
+    'django.contrib.humanize',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'colorfield',
+    
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5" 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -103,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -117,10 +130,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'home'
+    
 
