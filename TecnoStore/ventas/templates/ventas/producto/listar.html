@@ -27,7 +27,7 @@
         <nav id="nav">
             <ul>
                 <li><a href="{% url 'home' %}">Inicio</a></li>
-                <li><a href="{% url 'carrito' %}">Carrito</a></li>
+                <li><a href="{% url 'home' %}">Carrito</a></li>
                 {% if perms.app.add_producto %}
                     <li><a href="{% url 'agregar_productos' %}">Agregar Producto</a></li>
                 {% endif %}
@@ -56,6 +56,7 @@
                 <th>Precio</th>
                 <th>Marca</th>
                 <th>Imagen</th>
+                <th>Opciones</th>
             </tr>
         </thead>
         <tbody>
@@ -70,6 +71,10 @@
                     {% else %}
                     No disponible
                     {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'modificar_producto' p.id %}" class="btn btn-info btm-sm">Modificar</a>
+                    <a href="{% url 'eliminar_edicion' p.id %}" class="btn btn-danger btm-sm">Eliminar</a>
                 </td>
             </tr>
             {% endfor %}

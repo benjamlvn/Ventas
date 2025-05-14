@@ -56,11 +56,11 @@
     font-size: 1.3rem;
     font-weight: 600;
     margin-bottom: 20px;
-    color: #111;
+    color: #fcf9f9;
 }
 
 .btn-btn-primary {
-    background-color: #1a1a19;
+    background-color: #f0f9da;
     color: #170909;
     font-size: 14px;
     padding: 10px 30px;
@@ -72,7 +72,7 @@
 }
 
 .btn-btn-primary:hover {
-    background-color: #d8af75;
+    background-color: #f3ebdf;
 }
 
 .card .contenido-card {
@@ -85,8 +85,8 @@
     padding: 10px;
     margin-top: 10px;
     text-decoration: none;
-    color: #fcaf45;
-    border: 1px solid #fcaf45;
+    color: #f4eee6;
+    border: 1px solid #fdfbf8;
     border-radius: 4px;
     transition: all 400ms ease;
     margin-bottom: 5px;
