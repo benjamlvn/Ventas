@@ -1,0 +1,28 @@
+{% extends 'ventas/base.html' %}
+
+
+
+{% block contenido %}
+
+{% load humanize %}
+<br>
+<br>
+<br>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Marca</th>
+
+    </tr>
+    {% for p in productos %}
+    <tr>
+        <td>{{ p.nombre | title }}</td>
+        <td>{{ p.precio | intcomma }}</td>
+        <td>{{ p.marca | title }}</td>
+    </tr>
+
+    {% endfor %}
+</table>
+
+{% endblock %}
