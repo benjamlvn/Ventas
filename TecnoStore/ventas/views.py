@@ -1,7 +1,6 @@
 # Import necessary modules
-from django.shortcuts import redirect, render
-from .models import Producto, Carrito
-from .carrito import Carrito
+from django.shortcuts import redirect, render, get_object_or_404
+from .models import Producto
 from .forms import ProductoForm, CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
@@ -54,37 +53,6 @@ def registro(request):
 
     return render(request, 'registration/registro.html', data)
 
-def carrito(request):
-    return render(request, 'tienda/carrito.html')
-
-###carritoo
-def tienda(request):
-    productos = Producto.objects.all()
-    return render(request, "carrito.html", {'productos':productos})
-
-def agregar_producto(request, producto_id):
-    carrito = Carrito(request)
-    producto = Producto.objects.get(id=producto_id)
-    carrito.agregar(producto)
-    return redirect("carrito")
-
-def eliminar_producto(request, producto_id):
-    carrito = Carrito(request)
-    producto = Producto.objects.get(id=producto_id)
-    carrito.eliminar(producto)
-    return redirect("carrito")
-
-def restar_producto(request, producto_id):
-    carrito = Carrito(request)
-    producto = Producto.objects.get(id=producto_id)
-    carrito.restar(producto)
-    return redirect("carrito")
-
-def limpiar_carrito(request):
-    carrito = Carrito(request)
-    carrito.limpiar()
-    return redirect("home") ## -->
-
 # listar
 def listar_productos(request):
     productos = Producto.objects.all()
@@ -93,3 +61,24 @@ def listar_productos(request):
     }
 
     return render(request, 'ventas/producto/listar.html', data)
+
+def modificar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    data = {
+        'form': ProductoForm(instance=producto)
+    }
+    if request.method == 'POST':
+        formulario = ProductoForm(data=request.POST, instance=producto, files=request.FILES)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect(to="listar_productos")
+        else:
+            data["form"] = formulario
+    
+    return render(request, 'ventas/producto/modificar.html', data)
+
+def eliminar_edicion(request, producto_id):   
+    producto = get_object_or_404(Producto, id=producto_id)
+    producto.delete()
+    return redirect(to="listar_productos")
+    

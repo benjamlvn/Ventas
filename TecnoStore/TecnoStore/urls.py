@@ -18,18 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from ventas.views import agregar_producto, eliminar_producto, limpiar_carrito, restar_producto
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('ventas.urls')),
     path('accounts/', include ('django.contrib.auth.urls')),  # URL patterns for authentication
-    path('agregar/<int:producto_id>/', agregar_producto, name="Add"),
-    path('eliminar/<int:producto_id>/', eliminar_producto, name="Del"),
-    path('restar/<int:producto_id>/', restar_producto, name="Sub"),
-    path('limpiar/', limpiar_carrito, name="CLS"),
-    
+
 ]
 
 if settings.DEBUG:
