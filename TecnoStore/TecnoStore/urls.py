@@ -18,11 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('ventas.urls')),
-    path('accounts/', include ('django.contrib.auth.urls')),  # URL patterns for authentication
+    path('accounts/', include ('django.contrib.auth.urls')), 
+     path('consumir-apis/', views.consumir_apis, name='consumir_apis'),
+    path('seguridad/', views.seguridad, name='seguridad'),
+    path('stock/', views.stock, name='stock'),
+    path('productos/', views.productos, name='productos'),
+    path('', include('ventas.urls')),
+
+ # URL patterns for authentication
 
 ]
 

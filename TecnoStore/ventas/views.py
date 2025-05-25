@@ -81,4 +81,22 @@ def eliminar_edicion(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     producto.delete()
     return redirect(to="listar_productos")
+from django.shortcuts import render
+import requests
+
+def consumir_apis(request):
+    # Ejemplo simple de consumo de API externa
+    response = requests.get('https://jsonplaceholder.typicode.com/posts')
+    data = response.json() if response.status_code == 200 else []
+    return render(request, 'api_result.html', {'data': data})
+
+def seguridad(request):
+    return render(request, 'seguridad.html')
+
+def stock(request):
+    return render(request, 'stock.html')
+
+def productos(request):
+    return render(request, 'productos.html')
+
     
