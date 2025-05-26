@@ -33,3 +33,10 @@ class OrdenDespacho(models.Model):
     direccion = models.CharField(max_length=255)
     entregado = models.BooleanField(default=False)
 
+class ItemCarrito(models.Model):
+    carrito = models.ForeignKey('Carrito', related_name='items', on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.producto.nombre} x {self.cantidad}"
