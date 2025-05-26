@@ -7,6 +7,9 @@ from django.contrib.auth import login, authenticate
 from .serializers import ProductoSerializer, CarritoSerializer, BoletaSerializer, OrdenDespachoSerializer, ItemCarritoSerializer
 from rest_framework import viewsets
 import requests
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
 
 # Función para mostrar vistas
 def home(request):
@@ -109,13 +112,51 @@ class CarritoViewSet(viewsets.ModelViewSet):
     queryset = Carrito.objects.all()
     serializer_class = CarritoSerializer
 
+    @action(detail=False, methods=['post'])
+    def cerrar_compra(self, request):
+        carrito = Carrito.objects.filter(usuario=request.user)
+        if not carrito:
+            return Response({'mensaje': 'Carrito vacío'}, status=status.HTTP_400_BAD_REQUEST)
+        total = 0
+        for item in carrito:
+            if item.producto.stock >= item.cantidad:
+                item.producto.stock -= item.cantidad
+                item.producto.save()
+                total += item.producto.precio * item.cantidad
+            else:
+                return Response({'mensaje': f'Stock insuficiente para {item.producto.nombre}'}, status=status.HTTP_400_BAD_REQUEST)
+        boleta = Boleta.objects.create(usuario=request.user, total=total)
+        carrito.delete()
+        return Response({'mensaje': 'Compra realizada', 'boleta_id': boleta.id}, status=status.HTTP_201_CREATED)
+
+
+class BoletaViewSet(viewsets.ModelViewSet):
+    queryset = Boleta.objects.all()
+    serializer_class = BoletaSerializer
+# Filtro por usuario en APIs
+def get_queryset(self):
+    return Carrito.objects.filter(usuario=self.request.user)
+
 class BoletaViewSet(viewsets.ModelViewSet):
     queryset = Boleta.objects.all()
     serializer_class = BoletaSerializer
 
-class OrdenDespachoViewSet(viewsets.ModelViewSet):
-    queryset = OrdenDespacho.objects.all()
-    serializer_class = OrdenDespachoSerializer
+    def perform_create(self, serializer):
+        carrito = Carrito.objects.filter(usuario=self.request.user)
+        total = 0
+        for item in carrito:
+            if item.producto.stock >= item.cantidad:
+                item.producto.stock -= item.cantidad
+                item.producto.save()
+                total += item.producto.precio * item.cantidad
+            else:
+                raise serializers.ValidationError(f"Stock insuficiente para {item.producto.nombre}")
+        boleta = serializer.save(usuario=self.request.user, total=total)
+        carrito.delete()
+   
 class ItemCarritoViewSet(viewsets.ModelViewSet):
     queryset = ItemCarrito.objects.all()
     serializer_class = ItemCarritoSerializer
+class OrdenDespachoViewSet(viewsets.ModelViewSet):
+    queryset = OrdenDespacho.objects.all()
+    serializer_class = OrdenDespachoSerializer

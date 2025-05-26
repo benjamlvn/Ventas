@@ -40,3 +40,24 @@ class ItemCarrito(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre} x {self.cantidad}"
+    
+    
+ESTADOS_BOLETA = [
+    ('pendiente', 'Pendiente'),
+    ('pagado', 'Pagado'),
+    ('anulado', 'Anulado'),
+]
+
+class Boleta(models.Model):
+    ...
+    estado = models.CharField(max_length=10, choices=ESTADOS_BOLETA, default='pendiente')
+
+ESTADOS_DESPACHO = [
+    ('pendiente', 'Pendiente'),
+    ('enviado', 'Enviado'),
+    ('entregado', 'Entregado'),
+]
+
+class OrdenDespacho(models.Model):
+    ...
+    estado = models.CharField(max_length=10, choices=ESTADOS_DESPACHO, default='pendiente')
