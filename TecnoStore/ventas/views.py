@@ -1,10 +1,10 @@
 # Import necessary modules
 from django.shortcuts import redirect, render, get_object_or_404
-from .models import Producto, Carrito, Boleta, OrdenDespacho
+from .models import Producto, Carrito, Boleta, OrdenDespacho, ItemCarrito
 from .forms import ProductoForm, CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from .serializers import ProductoSerializer, CarritoSerializer, BoletaSerializer, OrdenDespachoSerializer
+from .serializers import ProductoSerializer, CarritoSerializer, BoletaSerializer, OrdenDespachoSerializer, ItemCarritoSerializer
 from rest_framework import viewsets
 import requests
 
@@ -116,3 +116,6 @@ class BoletaViewSet(viewsets.ModelViewSet):
 class OrdenDespachoViewSet(viewsets.ModelViewSet):
     queryset = OrdenDespacho.objects.all()
     serializer_class = OrdenDespachoSerializer
+class ItemCarritoViewSet(viewsets.ModelViewSet):
+    queryset = ItemCarrito.objects.all()
+    serializer_class = ItemCarritoSerializer
