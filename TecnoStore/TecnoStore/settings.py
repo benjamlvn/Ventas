@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'colorfield',
     'rest_framework',
     'drf_yasg',
+    'django_filters',
     
     
 ]
