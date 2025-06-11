@@ -1,8 +1,14 @@
+version: "3.9"
+
 services:
   web:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     ports:
-       - "80:8000"
+      - "80:8000"
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./TecnoStore:/app  # Para desarrollo, sincroniza cambios locales
+    environment:
+      - PYTHONUNBUFFERED=1
