@@ -12,6 +12,7 @@ COPY requerimientos.txt /app/
 
 # Instalar dependencias
 RUN pip install --no-cache-dir -r /app/requerimientos.txt
+RUN pip install setuptools
 
 # Exponer el puerto donde correrá Django
 EXPOSE 8000
