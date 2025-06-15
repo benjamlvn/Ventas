@@ -1,109 +1,153 @@
+{% extends 'ventas/base.html' %}
 {% load static %}
 {% load humanize %}
-<!doctype html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Tecnomarket</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.15/jquery.bxslider.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-qN/VKwxLBzME2YkdE+5E/VPLkZXl2b7xvFeoJq6Digw1k3D6Z0fjQX+0Gooy2cwr" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-		integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-    <link rel="stylesheet" href="{% static  'app/css/estilos.css' %}">
-    <link rel="stylesheet" href="{% static 'app/css/productos.css'%}"/>
-    
-</head>
-<body>
-<header id="header">
-    <img src="{% static 'app/img/menuiconwhite.png' %}" alt="menu" class="menu" id="menu">
-    <div class="contenedor_logo">
-        <img src="{% static 'app/img/logo1.png' %}" alt="logo" class="logo">
+
+{% block contenido %}
+<div id="carouselExampleFade" class="carousel slide carousel-fade container py-5" data-bs-ride="carousel" data-bs-interval="1000">
+  <h2 class="text-white text-center mb-4">Nuestros Productos Destacados</h2>
+  <div class="carousel-indicators">
+    {% for p in productos %}
+    <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+    {% endfor %}
+  </div>
+  <div class="carousel-inner">
+    {% for p in productos %}
+    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+      <div class="d-flex justify-content-center align-items-center bg-dark" style="height: 450px; overflow: hidden;">
+        {% if p.imagen %}
+        <img class="d-block img-fluid" src="{{ p.imagen.url }}" alt="{{ p.nombre }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+        {% else %}
+        <img class="d-block img-fluid" src="{% static 'app/img/no_image.png' %}" alt="Imagen no disponible" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+        {% endif %}
+      </div>
     </div>
-    <div>
-        <nav id="nav">
-            <ul>
-                <li>
-                    <a href="{% url 'home' %}l">Inicio</a>
-                </li>
-               
-                <li>
-                    <a href="{% url 'home'%}">Carrito</a>
-                </li>
-                {% if perms.app.add_producto %}
-
-                <li>
-                    <a href="{% url 'agregar_productos' %}">Agregar Producto</a>
-                </li>
-
-                {% endif %}
-
-                {% if perms.app.view_producto %}
-                <li>
-                    <a href="{% url 'listar_productos'%}">Listar Productos</a>
-                </li>
-                {% endif %}
-                
-				<li>
-					<a href="#">@{{ user.username }}
-					</a>
-				</li>
-                {% if user.is_authenticated %}
-				<li>
-					<a href="{% url 'logout' %}">Cerrar Session</a>
-				</li>
-				{% else %}
-				<li>
-					<a href="{% url 'login' %}">Iniciar Sesion</a>
-				</li>
-                <li>
-                    <a href="{% url 'registro' %}"></a>
-                </li>
-				{% endif %}
-            </ul>
-        </nav>
+    {% empty %}
+    <div class="carousel-item active">
+      <div class="d-flex justify-content-center align-items-center bg-dark text-white" style="height: 450px;">
+        <p>No hay productos destacados para mostrar.</p>
+      </div>
     </div>
-</header>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 
-<div id="contenido">
-
-    <div class="seccion-productos">
-    <div class="productos">
+{# Sección: Todos Nuestros Productos (ordenados) #}
+<div class="container py-5">
+    <h2 class="text-white text-center mb-4">Todos Nuestros Productos</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4"> {# Grid responsivo #}
         {% for p in productos %}
-            <div class="card" style="width: 15rem;">
-                {% if p.imagen %}
-                    <img src="{{ p.imagen.url }}" alt="">
-                {% endif %}
-                <div class="card-body">
-                    <h5>{{ p.autor | capfirst }}</h5>
-                    <h2 class="card-title">{{ p.nombre | title }}</h2>
-                    <h3>${{ p.precio | intcomma }}</h3>
-                    </h3>
-
-                    <a href="{% url 'home' %}" class="btn-btn-primary">Comprar</a>
+        <div class="col">
+            <div class="card bg-dark text-white h-100 shadow-sm"> {# Usamos clases de card existentes #}
+                <div class="card-img-top-wrapper d-flex justify-content-center align-items-center" style="height: 200px; overflow: hidden;">
+                    {% if p.imagen %}
+                    <img src="{{ p.imagen.url }}" class="img-fluid" alt="{{ p.nombre }}" style="object-fit: contain; max-height: 100%; max-width: 100%;">
+                    {% else %}
+                    <img src="{% static 'app/img/no_image.png' %}" class="img-fluid" alt="Imagen no disponible" style="object-fit: contain; max-height: 100%; max-width: 100%;">
+                    {% endif %}
+                </div>
+                <div class="card-body d-flex flex-column text-center">
+                    <h5 class="card-title text-white mb-2">{{ p.nombre|title }}</h5>
+                    <p class="card-text text-white-50 flex-grow-1">{{ p.descripcion|truncatechars:70 }}</p> {# Descripción corta #}
+                    <p class="card-text text-primary fs-5 fw-bold">${{ p.precio|intcomma }}</p>
+                    <div class="mt-auto">
+                        <a href="{% url 'detalle_producto' p.id %}" class="btn btn-info btn-sm w-100">Ver Detalles</a>
+                    </div>
                 </div>
             </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning text-center" role="alert">
+                No hay productos disponibles para mostrar.
+            </div>
+        </div>
         {% endfor %}
     </div>
 </div>
+
+{# Sección: Preguntas Frecuentes Actualizadas #}
+<div class="container py-5">
+    <h1 class="text-white text-center mb-5">Preguntas Frecuentes</h1>
+
+    <div class="accordion" id="faqAccordion">
+        {# Pregunta 1: Crear cuenta #}
+        <div class="accordion-item bg-dark text-white border-secondary mb-2">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    ¿Cómo puedo crear una cuenta en Tecnomarket?
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-white-50">
+                    Para crear una cuenta en Tecnomarket, haz clic en "Registrarse" en la barra de navegación superior. Completa el formulario con tus datos y sigue las instrucciones para activar tu cuenta.
+                </div>
+            </div>
+        </div>
+
+        {# Pregunta 2: Realizar un pedido #}
+        <div class="accordion-item bg-dark text-white border-secondary mb-2">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    ¿Cómo realizo un pedido en Tecnomarket?
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-white-50">
+                    Navega por nuestros productos, añade los artículos deseados a tu carrito de compras y luego haz clic en "Carrito" para proceder al pago. Sigue los pasos para seleccionar envío y método de pago.
+                </div>
+            </div>
+        </div>
+
+        {# Pregunta 3: Opciones de envío #}
+        <div class="accordion-item bg-dark text-white border-secondary mb-2">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    ¿Cuáles son las opciones de envío disponibles en Tecnomarket?
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-white-50">
+                    Ofrecemos envío a domicilio estándar y express. También tienes la opción de retiro en tienda en nuestras sucursales disponibles. Los costos y tiempos varían según tu ubicación.
+                </div>
+            </div>
+        </div>
+
+        {# Pregunta 4: Seguimiento de pedido #}
+        <div class="accordion-item bg-dark text-white border-secondary mb-2">
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    ¿Cómo puedo rastrear mi pedido de Tecnomarket?
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-white-50">
+                    Una vez que tu pedido sea despachado, recibirás un correo electrónico con un número de seguimiento y un enlace para rastrear el estado de tu envío en tiempo real.
+                </div>
+            </div>
+        </div>
+
+        {# Pregunta 5: Política de devoluciones #}
+        <div class="accordion-item bg-dark text-white border-secondary mb-2">
+            <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    ¿Cuál es la política de devoluciones de Tecnomarket?
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-white-50">
+                    En Tecnomarket, aceptamos devoluciones dentro de los 30 días posteriores a la compra, siempre y cuando el producto se encuentre en su empaque original y sin signos de uso. Consulta nuestra sección de Términos y Condiciones para más detalles.
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-<footer>
-    <footer>
-        <div class="marcas">
-            <img src="{% static 'app/img/footer/apple.png' %}" alt="apple" style="width: 30px;">
-            <img src="{% static 'app/img/footer/lenovo.png' %}" alt="lenovo">
-            <img src="{% static 'app/img/footer/microsoft.png' %}" alt="microsoft">
-            <img src="{% static 'app/img/footer/samsung.png' %}" alt="samsung">
-            <img src="{% static 'app/img/footer/xiaomi.png' %}" alt="xiaomi">
-        </div>
-        <div class="logo_footer">
-            <img src="{% static 'app/img/logo1.png' %}" alt="logo"> 
-        </div>
-    </footer>
-</footer>
-
-<script src="{% static 'app/js/menu.js' %}"></script>
-</body>
-</html>
+{% endblock %}
