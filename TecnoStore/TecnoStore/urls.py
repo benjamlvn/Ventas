@@ -30,6 +30,8 @@ urlpatterns = [
     path('stock/', views.stock, name='stock'),
     path('productos/', views.productos, name='productos'),
     path('', include('ventas.urls')),
+    path('admin/', admin.site.urls),
+    path('', include('ventas.urls')),  # Aquí incluyes las urls de ventas
 
  # URL patterns for authentication
 

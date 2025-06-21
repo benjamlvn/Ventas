@@ -8,15 +8,22 @@
                 <div class="card-body p-4">
                     <h2 class="card-title text-center mb-4">Registrarse</h2>
                     <hr class="mb-4">
-                    <form method="post">
+                    <form method="post" action="{% url 'registro' %}">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">Registrarse</button>
                         </div>
                     </form>
+
+                    {% if error %}
+                    <div class="alert alert-danger mt-3">{{ error }}</div>
+                    {% endif %}
+
                     <p class="text-center mt-3">
-                        <a href="{% url 'login' %}" class="btn btn-link text-white-50">¿Ya tienes cuenta? Inicia sesión aquí</a>
+                        <a href="{% url 'login' %}" class="btn btn-link text-white-50">
+                            ¿Ya tienes cuenta? Inicia sesión aquí
+                        </a>
                     </p>
                 </div>
             </div>

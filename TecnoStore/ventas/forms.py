@@ -9,7 +9,16 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         fields = '__all__'
     
-class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+class LoginForm(forms.Form):
+    username = forms.CharField(label="Usuario", max_length=100)
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
+
+class RegistroForm(forms.Form):
+    username = forms.CharField(max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField()
+    name = forms.CharField(max_length=100)
+    familyName = forms.CharField(max_length=100)
+class LoginForm(forms.Form):
+    username = forms.CharField(label="Nombre de usuario", max_length=100)
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)

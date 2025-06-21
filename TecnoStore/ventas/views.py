@@ -1,9 +1,8 @@
 # Import necessary modules
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Producto, Carrito, Boleta, OrdenDespacho, ItemCarrito
-from .forms import ProductoForm, CustomUserCreationForm
+from .forms import ProductoForm, RegistroForm, LoginForm
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
 from rest_framework import viewsets
 import requests
 from rest_framework.decorators import action
@@ -11,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q # Importar Q para consultas complejas
 from .serializers import ProductoSerializer, CarritoSerializer, BoletaSerializer, OrdenDespachoSerializer, ItemCarritoSerializer # Asegúrate de que esto esté presente
+
 
 # Función para mostrar vistas
 def home(request):
@@ -41,25 +41,7 @@ def agregar_productos(request):
 
     return render(request, 'ventas/producto/agregar.html', data)
 
-def registro(request):
-    data = {
-        'form': CustomUserCreationForm()
-    }
-    if request.method == 'POST':
-        formulario = CustomUserCreationForm(data=request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            user = authenticate(
-                username=formulario.cleaned_data['username'],
-                password=formulario.cleaned_data['password1']
-            )
-            login(request, user)
-            messages.success(request, "Usuario Registrado")
-            return redirect(to='home')
-        else:
-            data["form"] = formulario
 
-    return render(request, 'registration/registro.html', data)
 
 # Listar
 def listar_productos(request):
@@ -246,3 +228,109 @@ class ItemCarritoViewSet(viewsets.ModelViewSet):
 class OrdenDespachoViewSet(viewsets.ModelViewSet):
     queryset = OrdenDespacho.objects.all()
     serializer_class = OrdenDespachoSerializer
+
+#Api de seguridad
+
+from django.shortcuts import render, redirect
+import requests
+from .forms import LoginForm, RegistroForm
+
+def login_view(request):
+    form = LoginForm(request.POST or None)
+    error = None
+    if request.method == "POST" and form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+
+        url = "http://35.168.133.16:3000/login"
+        data = {"username": username, "password": password}
+        response = requests.post(url, json=data)
+
+        if response.status_code == 200:
+            tokens = response.json()
+            request.session["access_token"] = tokens.get("accessToken")
+            request.session["username"] = username
+            return redirect("home")  # Ajusta esta ruta
+        else:
+            error = "Credenciales incorrectas"
+
+    return render(request, "registration/login.html", {"form": form, "error": error})
+
+
+def registro_view(request):
+    form = RegistroForm(request.POST or None)
+    error = None
+    if request.method == "POST" and form.is_valid():
+        data = {
+            "username": form.cleaned_data["username"],
+            "password": form.cleaned_data["password"],
+            "email": form.cleaned_data["email"],
+            "name": form.cleaned_data["name"],
+            "familyName": form.cleaned_data["familyName"],
+        }
+        url = "http://35.168.133.16:3000/register"
+        response = requests.post(url, json=data)
+
+        if response.status_code == 200:
+            # Guardar el username en la sesión para usar en confirmación
+            request.session["username_confirm"] = form.cleaned_data["username"]
+            return redirect("confirmacion")
+        else:
+            error = response.json().get("message", "Error en el registro")
+
+    return render(request, "registration/registro.html", {"form": form, "error": error})
+
+def confirmacion_view(request):
+    error = None
+    mensaje = None
+
+    username_session = request.session.get("username_confirm", "")
+
+    if request.method == "POST":
+        username = request.POST.get("username") or username_session
+        code = request.POST.get("code")
+
+        url = "http://35.168.133.16:3000/Confirm"
+        data = {
+            "username": username,
+            "code": code
+        }
+        response = requests.post(url, json=data)
+
+        if response.status_code == 200:
+            mensaje = "Usuario confirmado exitosamente. Ahora puedes iniciar sesión."
+            # Limpiar el username almacenado en sesión
+            if "username_confirm" in request.session:
+                del request.session["username_confirm"]
+        else:
+            error = response.json().get("message", "Error al confirmar usuario")
+
+    return render(request, "registration/confirmacion.html", {
+        "error": error,
+        "mensaje": mensaje,
+        "username": username_session,
+    })
+def login_view(request):
+    form = LoginForm(request.POST or None)
+    error = None
+
+    if request.method == "POST" and form.is_valid():
+        username = form.cleaned_data["username"]
+        password = form.cleaned_data["password"]
+
+        url = "http://35.168.133.16:3000/login"
+        data = {"username": username, "password": password}
+        response = requests.post(url, json=data)
+
+        if response.status_code == 200:
+            tokens = response.json()
+            request.session["access_token"] = tokens.get("accessToken")
+            request.session["username"] = username
+            return redirect("home")
+        else:
+            error = "Credenciales incorrectas o usuario no confirmado."
+
+    return render(request, "registration/login.html", {
+        "form": form,
+        "error": error
+    })

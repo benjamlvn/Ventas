@@ -1,8 +1,8 @@
 from django.urls import path, include
 from .views import (
-    home, galeria, base, listar_productos, registro, modificar_producto, 
+    home, galeria, base, listar_productos, modificar_producto, 
     eliminar_edicion, agregar_productos, carrito, detalle_producto, agregar_al_carrito, # <-- ¡Asegúrate de agregar las nuevas vistas aquí!
-    ProductoViewSet, CarritoViewSet, BoletaViewSet, OrdenDespachoViewSet, ItemCarritoViewSet
+    ProductoViewSet, CarritoViewSet, BoletaViewSet, OrdenDespachoViewSet, ItemCarritoViewSet, login_view, registro_view, confirmacion_view
 )
 from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
@@ -35,7 +35,6 @@ urlpatterns = [
     path('', home, name='home'),
     path('galeria/', galeria, name='galeria'),
     path('base/', base, name='base'),
-    path('registro/', registro, name='registro'),
     path('agregar_productos/', agregar_productos, name='agregar_productos'),
     path('listar_productos/', listar_productos, name='listar_productos'),
     path('modificar_producto/<int:producto_id>/', modificar_producto, name='modificar_producto'),
@@ -43,8 +42,11 @@ urlpatterns = [
     path('carrito/', carrito, name='carrito'),
     path('producto/<int:producto_id>/', detalle_producto, name='detalle_producto'), # <-- ¡Nueva URL para detalle de producto!
     path('agregar_al_carrito/<int:producto_id>/', agregar_al_carrito, name='agregar_al_carrito'), # <-- ¡Nueva URL para agregar al carrito!
+    path("confirmacion/", confirmacion_view, name="confirmacion"),
     # Rutas de API REST
     path('api/', include(router.urls)),
+    path('login/', login_view, name='login'),
+    path('registro/', registro_view, name='registro'),
     
 ]
 
