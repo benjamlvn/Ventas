@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'django_filters',
+    'stock',
     
     
 ]
@@ -146,3 +147,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
     
 
+# API externa
+API_BASE_URL = "https://integracionstock-etefhkhbcadegaej.brazilsouth-01.azurewebsites.net"
+TOKEN_URL = "https://login.microsoftonline.com/TU_TENANT/oauth2/v2.0/token"
+CLIENT_ID = "TU_CLIENT_ID"
+CLIENT_SECRET = "TU_CLIENT_SECRET"
+TOKEN_SCOPE = "api://ID_DEL_API/.default"
